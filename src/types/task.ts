@@ -12,4 +12,6 @@ export type Task = {
   y: number;
   zIndex: number;
   rotation: number;
+  width?: number;
+  height?: number;
 };

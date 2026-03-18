@@ -30,6 +30,7 @@ export function NoteContent({
 }: NoteContentProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showPalette, setShowPalette] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDesc, setEditDesc] = useState(task.description);
@@ -62,7 +63,7 @@ export function NoteContent({
 
   return (
     <div
-      className={`${theme.bg} rounded-[1.5rem] p-8 min-h-[200px] flex flex-col relative`}>
+      className={`w-full h-full ${theme.bg} rounded-[1.5rem] p-8 flex flex-col relative min-h-0`}>
       <div className="mb-4 pointer-events-none">
         <span
           className={`${theme.text} font-handwriting text-4xl font-bold opacity-80`}>
@@ -175,21 +176,36 @@ export function NoteContent({
           }}
           onPointerDown={(event) => event.stopPropagation()}
           onMouseDown={(event) => event.stopPropagation()}
+          style={{ height: '100%' }}
           className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow bg-white/50 rounded px-2 -ml-2 outline-none focus:ring-2 focus:ring-[#78CDB0]/40 w-full resize-none whitespace-pre-wrap ${task.completed ? "line-through opacity-50" : ""}`}
           rows={6}
         />
       ) : (
-        <p
-          onDoubleClick={(event) => {
-            event.stopPropagation();
-            setIsEditingDesc(true);
-          }}
-          onPointerDown={(event) => event.stopPropagation()}
-          onMouseDown={(event) => event.stopPropagation()}
-          className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow cursor-text hover:bg-white/40 rounded px-2 -ml-2 transition-colors min-h-[3rem] whitespace-pre-wrap ${task.completed ? "line-through opacity-50" : ""}`}
-          title="Double click to edit (Cmd+Enter to save)">
-          {task.description || "Double click to add description..."}
-        </p>
+        <div className="flex flex-col flex-grow overflow-hidden min-h-0">
+          <p
+            onDoubleClick={(event) => {
+              event.stopPropagation();
+              setIsEditingDesc(true);
+            }}
+            onPointerDown={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
+            className={`text-base font-medium text-[#8C7A6B] leading-relaxed cursor-text hover:bg-white/40 rounded px-2 -ml-2 transition-colors whitespace-pre-wrap ${
+              !isExpanded && (task.description?.length || 0) > 200 ? "line-clamp-[8]" : "overflow-y-auto min-h-0 custom-scrollbar pb-2"
+            } ${task.completed ? "line-through opacity-50" : ""}`}
+            title="Double click to edit (Cmd+Enter to save)">
+            {task.description || "Double click to add description..."}
+          </p>
+          {(task.description?.length || 0) > 200 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(!isExpanded);
+              }}
+              className="text-[#78CDB0] text-sm font-bold mt-1 hover:underline self-start">
+              {isExpanded ? "See Less" : "See More..."}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

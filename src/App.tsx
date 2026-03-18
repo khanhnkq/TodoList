@@ -183,6 +183,14 @@ export default function App() {
     );
   };
 
+  const handleResizeEnd = (id: string, width: number, height: number) => {
+    setTasks((previousTasks) =>
+      previousTasks.map((task) =>
+        task.id === id ? { ...task, width, height } : task
+      )
+    );
+  };
+
   const addTask = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -221,6 +229,8 @@ export default function App() {
       y: centerY + (Math.random() * 60 - 30),
       zIndex: nextZIndex,
       rotation: Math.random() * 6 - 3,
+      width: 320,
+      height: 400,
     };
 
     setMaxZIndex(nextZIndex);
@@ -440,6 +450,8 @@ export default function App() {
                           setIsEditing={(isEditing) =>
                             setEditingNoteId(isEditing ? task.id : null)
                           }
+                          handleResizeEnd={handleResizeEnd}
+                          zoomScale={transformComponentRef.current?.instance.transformState.scale || 1}
                         />
                       </Fragment>
                     ))}
