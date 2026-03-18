@@ -12,6 +12,8 @@ type TaskNoteProps = {
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
 };
 
 export function TaskNote({
@@ -22,12 +24,15 @@ export function TaskNote({
   toggleTask,
   deleteTask,
   updateTask,
+  isEditing,
+  setIsEditing,
 }: TaskNoteProps) {
   const theme = THEMES[task.colorTheme];
 
   return (
     <motion.div
       drag
+      dragListener={!isEditing}
       dragConstraints={{ left: 0, top: 0 }}
       dragMomentum={false}
       onMouseDown={() => bringToFront(task.id)}
@@ -61,6 +66,7 @@ export function TaskNote({
           toggleTask={toggleTask}
           deleteTask={deleteTask}
           updateTask={updateTask}
+          setIsEditing={setIsEditing}
         />
       </div>
     </motion.div>

@@ -16,6 +16,7 @@ type NoteContentProps = {
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
+  setIsEditing: (isEditing: boolean) => void;
 };
 
 export function NoteContent({
@@ -25,12 +26,17 @@ export function NoteContent({
   toggleTask,
   deleteTask,
   updateTask,
+  setIsEditing,
 }: NoteContentProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
   const [showPalette, setShowPalette] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDesc, setEditDesc] = useState(task.description);
+
+  useEffect(() => {
+    setIsEditing(isEditingTitle || isEditingDesc);
+  }, [isEditingTitle, isEditingDesc, setIsEditing]);
 
   useEffect(() => {
     setEditTitle(task.title);
@@ -138,7 +144,8 @@ export function NoteContent({
               handleTitleSave();
             }
           }}
-          onPointerDownCapture={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
           className={`text-2xl font-bold text-[#5C4D43] mb-3 leading-tight bg-white/50 rounded px-2 -ml-2 outline-none focus:ring-2 focus:ring-[#78CDB0]/40 w-full ${task.completed ? "line-through opacity-50" : ""}`}
         />
       ) : (
@@ -161,14 +168,15 @@ export function NoteContent({
           onChange={(event) => setEditDesc(event.target.value)}
           onBlur={handleDescSave}
           onKeyDown={(event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
+            if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
               event.preventDefault();
               handleDescSave();
             }
           }}
-          onPointerDownCapture={(event) => event.stopPropagation()}
-          className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow bg-white/50 rounded px-2 -ml-2 outline-none focus:ring-2 focus:ring-[#78CDB0]/40 w-full resize-none ${task.completed ? "line-through opacity-50" : ""}`}
-          rows={4}
+          onPointerDown={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+          className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow bg-white/50 rounded px-2 -ml-2 outline-none focus:ring-2 focus:ring-[#78CDB0]/40 w-full resize-none whitespace-pre-wrap ${task.completed ? "line-through opacity-50" : ""}`}
+          rows={6}
         />
       ) : (
         <p
@@ -176,9 +184,10 @@ export function NoteContent({
             event.stopPropagation();
             setIsEditingDesc(true);
           }}
-          onPointerDownCapture={(event) => event.stopPropagation()}
-          className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow cursor-text hover:bg-white/40 rounded px-2 -ml-2 transition-colors min-h-[3rem] ${task.completed ? "line-through opacity-50" : ""}`}
-          title="Double click to edit">
+          onPointerDown={(event) => event.stopPropagation()}
+          onMouseDown={(event) => event.stopPropagation()}
+          className={`text-base font-medium text-[#8C7A6B] leading-relaxed flex-grow cursor-text hover:bg-white/40 rounded px-2 -ml-2 transition-colors min-h-[3rem] whitespace-pre-wrap ${task.completed ? "line-through opacity-50" : ""}`}
+          title="Double click to edit (Cmd+Enter to save)">
           {task.description || "Double click to add description..."}
         </p>
       )}

@@ -29,7 +29,7 @@ export function AddTaskForm({
   onSubmit,
 }: AddTaskFormProps) {
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-2xl">
+    <div className="w-[94%] max-w-2xl">
       <motion.form
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -67,12 +67,17 @@ export function AddTaskForm({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <input
-            type="text"
+          <textarea
             placeholder="Add some details (optional)..."
             value={newTaskDesc}
             onChange={(event) => onDescChange(event.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-[#F0EBE1] border-transparent focus:bg-white focus:border-[#78CDB0]/35 focus:ring-3 focus:ring-[#78CDB0]/20 transition-all outline-none font-medium text-[#8C7A6B] placeholder:text-[#A89F91] text-sm"
+            className="w-full px-4 py-2 rounded-xl bg-[#F0EBE1] border-transparent focus:bg-white focus:border-[#78CDB0]/35 focus:ring-3 focus:ring-[#78CDB0]/20 transition-all outline-none font-medium text-[#8C7A6B] placeholder:text-[#A89F91] text-sm resize-none min-h-[42px] max-h-32"
+            rows={1}
+            onInput={(e) => {
+              const target = e.target as HTMLTextAreaElement;
+              target.style.height = "auto";
+              target.style.height = `${target.scrollHeight}px`;
+            }}
           />
 
           <input
@@ -80,7 +85,7 @@ export function AddTaskForm({
             placeholder="Paste YouTube link (optional)..."
             value={newTaskYoutubeUrl}
             onChange={(event) => onYoutubeUrlChange(event.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-[#F0EBE1] border-transparent focus:bg-white focus:border-[#78CDB0]/35 focus:ring-3 focus:ring-[#78CDB0]/20 transition-all outline-none font-medium text-[#8C7A6B] placeholder:text-[#A89F91] text-sm"
+            className="w-full px-4 py-2 rounded-xl bg-[#F0EBE1] border-transparent focus:bg-white focus:border-[#78CDB0]/35 focus:ring-3 focus:ring-[#78CDB0]/20 transition-all outline-none font-medium text-[#8C7A6B] placeholder:text-[#A89F91] text-sm h-[42px]"
           />
         </div>
 
